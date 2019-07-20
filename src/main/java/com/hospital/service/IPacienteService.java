@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IPacienteService {
 
-    void registrar(Paciente pac);
+    Paciente registrar(Paciente pac);
     void modificar(Paciente pac);
     List<Paciente> listar();
     Paciente leerPorId(Integer id);

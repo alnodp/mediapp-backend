@@ -16,8 +16,8 @@ public class PacienteServiceImpl implements IPacienteService {
 
 
     @Override
-    public void registrar(Paciente pac) {
-        repo.save(pac);
+    public Paciente registrar(Paciente pac) {
+        return repo.save(pac);
     }
 
     @Override
