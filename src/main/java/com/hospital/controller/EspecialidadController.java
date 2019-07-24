@@ -1,8 +1,10 @@
 package com.hospital.controller;
 
 import com.hospital.exception.ModelNotFoundException;
-import com.hospital.model.Paciente;
-import com.hospital.service.IPacienteService;
+import com.hospital.model.Especialidad;
+import com.hospital.model.Medico;
+import com.hospital.service.IEspecialidadService;
+import com.hospital.service.IMedicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -19,58 +21,58 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/pacientes")
-public class PacienteController {
+@RequestMapping("/especialidades")
+public class EspecialidadController {
 
     @Autowired
-    private IPacienteService service;
+    private IEspecialidadService service;
 
     @GetMapping
-    public ResponseEntity<List<Paciente>> listar() {
-        List<Paciente> lista = service.listar();
-        return new ResponseEntity<List<Paciente>>(lista, HttpStatus.OK);
+    public ResponseEntity<List<Especialidad>> listar() {
+        List<Especialidad> lista = service.listar();
+        return new ResponseEntity<List<Especialidad>>(lista, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Paciente> leerPorId(@PathVariable("id") Integer id) {
-        Paciente pac = service.leerPorId(id);
-        if(pac == null) {
+    public ResponseEntity<Especialidad> leerPorId(@PathVariable("id") Integer id) {
+        Especialidad esp = service.leerPorId(id);
+        if(esp == null) {
             throw new ModelNotFoundException("Id no encontrado " + id);
         }
-        return new ResponseEntity<Paciente>(pac, HttpStatus.OK);
+        return new ResponseEntity<Especialidad>(esp, HttpStatus.OK);
     }
 
     @GetMapping("/hateoas/{id}")
-    public Resource<Paciente> leerPorIdHateoas(@PathVariable("id") Integer id) {
-        Paciente pac = service.leerPorId(id);
-        if(pac == null) {
+    public Resource<Especialidad> leerPorIdHateoas(@PathVariable("id") Integer id) {
+        Especialidad esp = service.leerPorId(id);
+        if(esp == null) {
             throw new ModelNotFoundException("Id no encontrado " + id);
         }
 
-        Resource<Paciente> resource = new Resource<Paciente>(pac);
+        Resource<Especialidad> resource = new Resource<Especialidad>(esp);
 
         ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).leerPorId(id));
-        resource.add(linkTo.withRel("paciente-resource"));
+        resource.add(linkTo.withRel("especialidad-resource"));
         return resource;
     }
 
     @PostMapping
-    public ResponseEntity<Object> registrar(@Valid @RequestBody Paciente pac) {
-        Paciente paciente = service.registrar(pac);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(paciente.getIdPaciente()).toUri();
+    public ResponseEntity<Object> registrar(@Valid @RequestBody Especialidad esp) {
+        Especialidad especialidad = service.registrar(esp);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(especialidad.getIdEspecialidad()).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping
-    public ResponseEntity<Object> modificar(@Valid @RequestBody Paciente pac) {
-        service.registrar(pac);
+    public ResponseEntity<Object> modificar(@Valid @RequestBody Especialidad esp) {
+        service.registrar(esp);
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> eliminar(@PathVariable("id") Integer id) {
-        Paciente pac = service.leerPorId(id);
-        if(pac == null) {
+        Especialidad esp = service.leerPorId(id);
+        if(esp == null) {
             throw new ModelNotFoundException("Id no encontrado " + id);
         } else {
             service.eliminar(id);
